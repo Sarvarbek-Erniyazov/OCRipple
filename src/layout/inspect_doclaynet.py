@@ -1,20 +1,25 @@
-"""Peek at DocLayNet-small schema safely without split inspection."""
+"""Inspect ds4sd/DocLayNet-v1.1 parquet schema (one test shard)."""
 from datasets import load_dataset
+from huggingface_hub import hf_hub_download
 
-name = "pierreguillou/DocLayNet-small"
+REPO = "ds4sd/DocLayNet-v1.1"
+shard = hf_hub_download(
+    REPO, "data/test-00000-of-00002-635b47e9044a436c.parquet",
+    repo_type="dataset")
 
-# Xatolik berayotgan get_dataset_split_names olib tashlandi
-print("Dataset yuklanmoqda...")
-ds = load_dataset(name, split="train", streaming=True, trust_remote_code=True)
+ds = load_dataset("parquet", data_files=[shard], split="train")
+print("rows:", len(ds))
+print("columns:", ds.column_names, "\n")
 
-sample = next(iter(ds))
-print("\n--- DATASET SCHEMA ---")
-for k, v in sample.items():
+ex = ds[0]
+for k, v in ex.items():
     desc = type(v).__name__
     if isinstance(v, (str, int, float, bool)):
         desc += f" = {str(v)[:60]}"
     elif isinstance(v, list):
         desc += f" (len={len(v)})"
-        if v and not isinstance(v[0], (list, dict)):
-            desc += f" e.g. {str(v[:3])[:60]}"
+        if v:
+            desc += f" first={str(v[0])[:80]}"
+    elif isinstance(v, dict):
+        desc += f" keys={list(v.keys())}"
     print(f"{k:22s} {desc}")
