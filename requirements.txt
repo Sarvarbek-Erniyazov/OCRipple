@@ -9,3 +9,5 @@ pandas
 matplotlib
 tqdm
 python-dotenv
+pytesseract
+inference-sdk
