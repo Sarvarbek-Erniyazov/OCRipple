@@ -1,0 +1,11 @@
+datasets
+huggingface_hub
+pymupdf
+augraphy
+opencv-python
+pillow
+jiwer            # CER/WER
+pandas
+matplotlib
+tqdm
+python-dotenv

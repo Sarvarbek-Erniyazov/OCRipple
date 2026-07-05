@@ -1,0 +1,19 @@
+# Data (HuggingFace/Roboflow'da hosting qilinadi)
+data/
+*.pdf
+*.png
+*.jpg
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Secrets
+.env
+kaggle.json
