@@ -17,7 +17,9 @@ Scan → Layout Detection (RF-DETR via Roboflow) → OCR
 (Tesseract | PaddleOCR | DeepSeek-OCR | Unlimited-OCR) → RAG → QA eval
 
 ## Status
-🚧 Day 1/7 — data preparation
+- ✅ Day 1 — data ready: arXiv synthetic scans (172 items, 4 levels) + MP-DocVQA subset (50 docs / 300 QAs / 350 pages)
+- 🚧 Day 2 — layout detection (Roboflow) + OCR engines
+
 
 ## Datasets
 - MP-DocVQA (subset) — real scans + QA pairs
