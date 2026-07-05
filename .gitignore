@@ -1,5 +1,5 @@
 # Data (HuggingFace/Roboflow'da hosting qilinadi)
-data/
+/data/
 *.pdf
 *.png
 *.jpg
