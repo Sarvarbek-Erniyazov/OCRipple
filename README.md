@@ -26,6 +26,8 @@ and loses 25% of ground-truth email addresses under heavy scan degradation,
 while both VLM-family engines (DeepSeek-OCR, and — pending — Unlimited-OCR)
 retain 100%.
 
+![CER vs downstream answer quality](results/figures/cer_vs_anls.png)
+
 ## Pipeline
 Scan → Layout Detection (RF-DETR via Roboflow, mAP@50 73.8%)
 → OCR (Tesseract | PaddleOCR | DeepSeek-OCR | Unlimited-OCR*)
