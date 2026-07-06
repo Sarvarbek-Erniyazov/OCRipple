@@ -11,3 +11,4 @@ tqdm
 python-dotenv
 pytesseract
 inference-sdk
+sentence-transformers

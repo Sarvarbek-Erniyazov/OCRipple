@@ -28,13 +28,20 @@ def get_engine(name):
         return run
     if name == "paddle":
         from paddleocr import PaddleOCR
-        ocr = PaddleOCR(use_angle_cls=False, lang="en", show_log=False)
+        ocr = PaddleOCR(
+            lang="en",
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False,
+            enable_mkldnn=False,
+        )
         def run(img_path):
-            result = ocr.ocr(str(img_path), cls=False)
+            results = ocr.predict(str(img_path))
             lines = []
-            for page in result or []:
-                for item in page or []:
-                    lines.append(item[1][0])
+            for res in results or []:
+                d = getattr(res, "res", None) or (res if isinstance(res, dict) else {})
+                if "rec_texts" in d:
+                    lines.extend(d["rec_texts"])
             return "\n".join(lines)
         return run
     raise ValueError(f"unknown engine: {name}")
