@@ -1,0 +1,4 @@
+engine,CER_clean,CER_heavy,Hit@3,AnswerANLS,EmailRecall_clean,EmailRecall_heavy
+tesseract,0.075,0.125,0.833,0.712,1.0,0.75
+deepseek_ocr,0.165,0.158,0.797,0.816,1.0,1.0
+paddle,0.476,0.484,0.827,0.848,1.0,1.0
