@@ -17,3 +17,11 @@
 - MP-DocVQA (lmms-lab mirror) — multi-page document VQA
 - DocLayNet v1.1 (ds4sd) — layout detection, 11 classes
 - arXiv papers (1706.03762, 1512.03385, 1810.04805) — synthetic scan GT
+
+## Known limitation: PaddleOCR text ordering
+Diff analysis (attention_p000.png) shows PaddleOCR recognizes individual
+words/tokens correctly but fails to preserve reading order in multi-column
+author-block layouts (groups all names, then all affiliations, then all
+emails, instead of reading each column top-to-bottom). This inflates raw
+CER without reflecting true recognition failure. Vertical text (e.g. arXiv
+ID sidebar) is also misread when treated as horizontal.
