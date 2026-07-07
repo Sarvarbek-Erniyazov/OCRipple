@@ -21,3 +21,4 @@ kaggle.json
 # But keep result figures (charts for README/report)
 !results/figures/*.png
 !results/figures/*.jpg
+!report/*.pdf
