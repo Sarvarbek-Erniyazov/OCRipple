@@ -23,8 +23,8 @@ PaddleOCR has by far the worst raw CER (driven by a text-ordering artifact,
 not misrecognition — see Limitations) yet produces the *best* downstream
 answer quality. Tesseract has the best raw CER yet the worst answer quality
 and loses 25% of ground-truth email addresses under heavy scan degradation,
-while both VLM-family engines (DeepSeek-OCR, and — pending — Unlimited-OCR)
-retain 100%.
+while DeepSeek-OCR retains 100% (Unlimited-OCR was also run but its results
+are excluded — see Section 7 of the technical report).
 
 ![CER vs downstream answer quality](results/figures/cer_vs_anls.png)
 
@@ -33,7 +33,8 @@ Scan → Layout Detection (RF-DETR via Roboflow, mAP@50 73.8%)
 → OCR (Tesseract | PaddleOCR | DeepSeek-OCR | Unlimited-OCR*)
 → [Stage 1] Retrieval + Answer-Presence (MP-DocVQA, real scans)
 → [Stage 2] Fact (email) Recall vs. Degradation (synthetic arXiv scans)
-*Unlimited-OCR run in progress — see Status.
+*Unlimited-OCR ran to completion but its results are excluded from this
+report — see Status and `report/technical_report.md` Section 7.
 
 ## Datasets
 
@@ -52,7 +53,7 @@ Scan → Layout Detection (RF-DETR via Roboflow, mAP@50 73.8%)
 | Tesseract 5 | classical pixel-based | local CPU |
 | PaddleOCR (PP-OCRv6) | production OCR | local CPU |
 | DeepSeek-OCR | vision-language model | Kaggle T4 |
-| Baidu Unlimited-OCR | vision-language model, R-SWA | Kaggle T4 (pending) |
+| Baidu Unlimited-OCR | vision-language model, R-SWA | Kaggle T4 (ran, results excluded) |
 
 ## Layout detection
 
@@ -80,10 +81,12 @@ Deployed as a hosted Roboflow API.
   pages / 300 QAs) + DocLayNet subset (500 pages)
 - ✅ Layout detection: trained + deployed (Roboflow)
 - ✅ 3/4 OCR engines run to completion: Tesseract, PaddleOCR, DeepSeek-OCR
-- ⏳ Unlimited-OCR: running on Kaggle T4 (Save & Run All commit), pending
+- ⚠️ Unlimited-OCR: inference completed (522/522 pages) but downstream
+  metrics are excluded — a bug in our tag-stripping regex silently discarded
+  53.4% of outputs; see `report/technical_report.md` Section 7
 - ✅ Stage 1 (retrieval + answer-presence) and Stage 2 (fact recall) complete
   for 3 engines
-- 🚧 Final report + Unlimited-OCR integration in progress
+- ✅ Full technical report complete, including output-integrity audit
 
 ## Reproducing
 
