@@ -1,0 +1,7 @@
+engine,has_table,anls_mean,hit_mean,n
+tesseract,False,0.778,0.851,202
+tesseract,True,0.577,0.796,98
+deepseek_ocr,False,0.827,0.817,202
+deepseek_ocr,True,0.793,0.755,98
+paddle,False,0.854,0.847,202
+paddle,True,0.834,0.786,98
