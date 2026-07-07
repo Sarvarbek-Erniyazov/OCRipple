@@ -199,3 +199,20 @@ shares the same DeepSeekV2 backbone family: it showed flat CER and 100%
 email recall across all degradation levels, versus Tesseract's 25%
 recall loss at the heaviest level — consistent with, though not a full
 validation of, R-SWA's stated robustness goal.
+
+## 8b. Additional note: our test did not exercise Unlimited-OCR's core capability
+
+After the fact, we found Baidu's official usage example (README,
+github.com/baidu/Unlimited-OCR) uses prompt `<image>document parsing.` for
+single images and a separate `model.infer_multi()` method — passing a list
+of page images in one call — for its flagship long-horizon, multi-page
+capability powered by R-SWA. Our pipeline used `model.infer()` per page with
+prompt `<image>\nFree OCR.`, matching the DeepSeek-OCR pattern rather than
+Unlimited-OCR's documented interface. Two consequences: (1) the prompt
+mismatch may itself explain the dense `<|det|>...<|/det|>` tag output that
+broke our post-processing regex (Section 8), and (2) more importantly, we
+never invoked `infer_multi()`, meaning this report does not test the model's
+core claimed capability (processing 40+ pages in one forward pass) at all —
+only single-page inference, which is not what Unlimited-OCR is designed or
+marketed for. Any future re-evaluation should use the documented prompt and
+`infer_multi()` on genuine multi-page documents.
