@@ -8,7 +8,7 @@ error rate (WER). This report tests whether that metric is the right one to
 optimize, by measuring CER *and* two downstream tasks side by side, across
 three OCR paradigms: classical (Tesseract), production (PaddleOCR), and
 vision-language-model-based (DeepSeek-OCR). A fourth engine, Baidu
-Unlimited-OCR, was run but its results are excluded — see Section 7.
+Unlimited-OCR, was run but its results are excluded — see Section 8.
 
 ## 2. Method
 
@@ -37,7 +37,7 @@ Roboflow.
 | Tesseract | 5.5.0 | local CPU | pytesseract wrapper |
 | PaddleOCR | PP-OCRv6 (medium det+rec) | local CPU | `enable_mkldnn=False` required (oneDNN/PIR incompatibility in paddlepaddle 3.3.1) |
 | DeepSeek-OCR | HF `deepseek-ai/DeepSeek-OCR` | Kaggle T4 | `torch_dtype=bfloat16`, `_attn_implementation="eager"`; float16 caused a `masked_scatter_` dtype mismatch inside the vision encoder |
-| Baidu Unlimited-OCR | HF `baidu/Unlimited-OCR` | Kaggle T4 | shares the DeepSeekV2 backbone; required disabling PyTorch JIT GPU fusion to work around an `nvrtc` kernel-compilation failure — see Section 7 for why its results are excluded |
+| Baidu Unlimited-OCR | HF `baidu/Unlimited-OCR` | Kaggle T4 | shares the DeepSeekV2 backbone; required disabling PyTorch JIT GPU fusion to work around an `nvrtc` kernel-compilation failure — see Section 8 for why its results are excluded |
 
 ### 2.3 Layout detection
 
@@ -114,7 +114,29 @@ degradation that neither other engine shows. The type of error (ordering vs.
 recognition vs. omission) matters more than its raw quantity for tasks that
 consume OCR output downstream.
 
-## 5. Limitations
+## 5. Layout-aware analysis: does Table content hurt more?
+
+Using the deployed Roboflow layout model (Section 2.3), we tagged each
+question's gold answer page with whether it contains a Table region (98 of
+300 questions do), then compared Answer ANLS between Table-pages and
+non-Table-pages, per engine.
+
+| Engine | ANLS, no Table | ANLS, has Table | Relative drop |
+|---|---|---|---|
+| Tesseract | 0.778 | 0.577 | **-25.9%** |
+| DeepSeek-OCR | 0.827 | 0.793 | -4.2% |
+| PaddleOCR | 0.854 | 0.834 | -2.3% |
+
+Tesseract's answer quality drops sharply on pages containing tables, while
+DeepSeek-OCR and PaddleOCR remain comparatively flat. This localizes the
+"CER doesn't predict downstream quality" finding (Section 4) to a specific,
+actionable cause: classical OCR's difficulty with tabular structure — not
+just the multi-column reading-order issue described in Section 3.3 (which
+affected author blocks), but a broader pattern across real-world tabular
+content in MP-DocVQA. Practical implication: for table-heavy document
+collections, engine choice matters more than aggregate CER would suggest.
+
+## 6. Limitations
 
 - Sample size is small (3 papers / 172 synthetic pages, 50 documents / 300
   questions) — appropriate for a one-week exploratory study, not a
@@ -125,7 +147,7 @@ consume OCR output downstream.
 - CER normalization (stripping markdown symbols) is coarse and was not
   independently validated against a human-annotated gold normalization.
 
-## 6. Reproducibility notes
+## 7. Reproducibility notes
 
 Getting VLM OCR engines running on Kaggle required resolving, in order: a
 missing `addict` dependency, a `transformers` API mismatch
@@ -135,7 +157,7 @@ after pinning `transformers` too far back, a `float16`/`float32`
 failure inside a fused `quick_gelu` op. All were resolved without modifying
 model weights or logic — only environment/dtype/JIT configuration.
 
-## 7. Unlimited-OCR: run completed, results excluded
+## 8. Unlimited-OCR: run completed, results excluded
 
 Baidu's Unlimited-OCR ([GitHub](https://github.com/baidu/Unlimited-OCR),
 [HuggingFace](https://huggingface.co/baidu/Unlimited-OCR)) is a 3B-parameter
