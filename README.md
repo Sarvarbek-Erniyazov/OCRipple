@@ -90,6 +90,9 @@ Deployed as a hosted Roboflow API.
 
 ## Reproducing
 
+The actual Kaggle notebooks used for the VLM runs are in `notebooks/` (`deepseek_ocr_kaggle_run.ipynb`, `unlimited_ocr_kaggle_run.ipynb`) as executed, including all environment fixes and errors encountered.
+
+
 See `src/` for the full pipeline: `degradation/generate.py` (synthetic scans),
 `data/load_mpdocvqa.py`, `layout/to_coco.py` + `infer_layout.py`,
 `ocr_engines/run_ocr.py`, `eval/compute_cer.py`,
